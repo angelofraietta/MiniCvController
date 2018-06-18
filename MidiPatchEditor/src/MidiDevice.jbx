@@ -1,0 +1,18 @@
+[PropertyInfo]
+chkGenReset,JCheckBox,false,false, , ,false,<default>
+chkInvert,JCheckBox,false,false, , ,false,<default>
+chkMidiOut2,JCheckBox,false,false, , ,false,<default>
+chkMute,JCheckBox,false,false, , ,false,<default>
+cmbChannel,JComboBox,false,false, , ,false,<default>
+cmbDevice,JComboBox,false,false, , ,false,<default>
+cmbMessageType,JComboBox,false,false, , ,false,<default>
+jLabel1,JLabel,false,false, , ,false,<default>
+jLabel2,JLabel,false,false, , ,false,<default>
+jLabel3,JLabel,false,false, , ,false,<default>
+rdData1,JRadioButton,false,false, , ,false,<default>
+rdData2,JRadioButton,false,false, , ,false,<default>
+[IconNames]
+
+
+
+

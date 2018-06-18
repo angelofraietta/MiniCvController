@@ -1,0 +1,941 @@
+CCS PCM C Compiler, Version 3.060, 12652
+
+               Filename: D:\DEVELOP\MIDICO~1\MIDICO~1\CODE\MIDIIN.LST
+
+               ROM used: 453 (6%)
+                         Largest free fragment is 2048
+               RAM used: 41 (23%) at main() level
+                         48 (27%) worst case
+               Stack:    3 worst case (1 in main + 2 for interrupts)
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   087
+0003:  NOP
+0004:  MOVWF  7F
+0005:  SWAPF  03,W
+0006:  BCF    03.5
+0007:  BCF    03.6
+0008:  MOVWF  21
+0009:  MOVF   0A,W
+000A:  MOVWF  20
+000B:  CLRF   0A
+000C:  MOVF   04,W
+000D:  MOVWF  22
+000E:  MOVF   77,W
+000F:  MOVWF  23
+0010:  MOVF   78,W
+0011:  MOVWF  24
+0012:  MOVF   79,W
+0013:  MOVWF  25
+0014:  MOVF   7A,W
+0015:  MOVWF  26
+0016:  MOVF   7B,W
+0017:  MOVWF  27
+0018:  BCF    03.7
+0019:  BCF    03.5
+001A:  MOVLW  8C
+001B:  MOVWF  04
+001C:  BTFSS  00.5
+001D:  GOTO   020
+001E:  BTFSC  0C.5
+001F:  GOTO   033
+0020:  MOVF   22,W
+0021:  MOVWF  04
+0022:  MOVF   23,W
+0023:  MOVWF  77
+0024:  MOVF   24,W
+0025:  MOVWF  78
+0026:  MOVF   25,W
+0027:  MOVWF  79
+0028:  MOVF   26,W
+0029:  MOVWF  7A
+002A:  MOVF   27,W
+002B:  MOVWF  7B
+002C:  MOVF   20,W
+002D:  MOVWF  0A
+002E:  SWAPF  21,W
+002F:  MOVWF  03
+0030:  SWAPF  7F,F
+0031:  SWAPF  7F,W
+0032:  RETFIE
+0033:  BCF    0A.3
+0034:  BCF    0A.4
+0035:  GOTO   044
+....................  /****************************************************** 
+.................... * Author: A. Fraietta 
+.................... * Description: Tests the Midi Input queue functions 
+.................... * define TEST_QUEUEwhen testing queues on simulator 
+.................... ******************************************************/ 
+....................  
+.................... #include "16f877.h" 
+....................  //////// Standard Header file for the PIC16F877 device //////////////// 
+.................... #device PIC16F877 
+.................... #list 
+.................... 
+....................  
+.................... #define MIDIOUT_1_PIN PIN_C6 
+.................... #define MIDIOUT_2_PIN PIN_C5 
+.................... #define MIDI_IN_PIN PIN_C7 
+....................  
+.................... #fuses HS, WDT, BROWNOUT, NOPUT, NOLVP 
+.................... #use delay (clock = 10000000) 
+....................  
+.................... #use rs232(baud=31250, xmit=MIDIOUT_1_PIN, rcv=MIDI_IN_PIN, ERRORS)  
+0036:  BTFSS  0C.5
+0037:  GOTO   036
+0038:  MOVF   18,W
+0039:  MOVWF  28
+003A:  MOVF   1A,W
+003B:  MOVWF  78
+003C:  BTFSS  28.1
+003D:  GOTO   040
+003E:  BCF    18.4
+003F:  BSF    18.4
+0040:  NOP
+0041:  BCF    0A.3
+0042:  BCF    0A.4
+0043:  GOTO   045 (RETURN)
+....................  
+.................... #define TEST_QUEUE 
+.................... #define MIDI_IN_QUEUE_SIZE QUEUE_SIZE  
+.................... //#include "midicfg.h" 
+.................... #include "midiin.h" 
+....................  /************************************************************* 
+.................... * Author: Angelo Fraietta 
+.................... * Description Process the reception of Input and output using a  
+.................... * sixteen byte queue 
+.................... * Dependancy : calls ProcessMidiIn 
+.................... *************************************************************/ 
+.................... #byte PIR1 = 0x0C 
+.................... #byte TXREG = 0x19 
+....................  
+.................... // define a  volatile flag that becomes true when a char is received 
+.................... // and is reset by external program 
+.................... short input_unlocked;  
+....................                     
+....................  
+.................... #define QUEUE_SIZE  16 
+.................... #define MAX_QUEUE 15 
+....................  
+.................... byte midi_queue_data [QUEUE_SIZE]; 
+....................  
+.................... int  midi_head; // the size is important as we just make the value  
+.................... int  midi_tail; // cycle from 0x0 to QUEUE_SIZE by incrementing 
+....................  
+....................  
+.................... short midi_overflow; 
+....................  
+.................... // return true if flag was set when we cleared it 
+.................... #inline  
+.................... short ClearRxFlag() 
+.................... { 
+.................... 	short ret; 
+....................  
+.................... 	ret = input_unlocked; 
+.................... 	input_unlocked = 0; 
+.................... 	return ret; 
+.................... } 
+....................  
+.................... #inline  
+.................... short InQueueEmpty() 
+.................... { 
+....................   return midi_head == midi_tail; 
+*
+00E8:  MOVF   3B,W
+00E9:  SUBWF  3A,W
+00EA:  BTFSC  03.2
+00EB:  GOTO   0EE
+00EC:  MOVLW  00
+00ED:  GOTO   0EF
+00EE:  MOVLW  01
+00EF:  MOVWF  78
+*
+013B:  MOVF   3B,W
+013C:  SUBWF  3A,W
+013D:  BTFSC  03.2
+013E:  GOTO   141
+013F:  MOVLW  00
+0140:  GOTO   142
+0141:  MOVLW  01
+0142:  MOVWF  78
+.................... } 
+....................  
+....................  
+.................... #inline  
+.................... short InOverflow() 
+.................... { 
+....................   return midi_overflow; 
+*
+00F3:  MOVLW  00
+00F4:  BTFSC  29.1
+00F5:  MOVLW  01
+00F6:  MOVWF  78
+*
+0131:  MOVLW  00
+0132:  BTFSC  29.1
+0133:  MOVLW  01
+0134:  MOVWF  78
+.................... } 
+....................  
+.................... #inline  
+.................... short InQueueFull() 
+.................... { 
+*
+0049:  BCF    49.0
+*
+00B9:  BCF    49.0
+*
+0102:  BCF    49.0
+*
+0170:  BCF    49.0
+.................... 	short ret = false; 
+.................... 	if (midi_tail != midi_head) 
+*
+004A:  MOVF   3A,W
+004B:  SUBWF  3B,W
+004C:  BTFSC  03.2
+004D:  GOTO   061
+*
+00BA:  MOVF   3A,W
+00BB:  SUBWF  3B,W
+00BC:  BTFSC  03.2
+00BD:  GOTO   0D1
+*
+0103:  MOVF   3A,W
+0104:  SUBWF  3B,W
+0105:  BTFSC  03.2
+0106:  GOTO   11A
+*
+0171:  MOVF   3A,W
+0172:  SUBWF  3B,W
+0173:  BTFSC  03.2
+0174:  GOTO   188
+.................... 		{ 
+.................... 			if (!midi_head) // head is zero 
+*
+004E:  MOVF   3A,F
+004F:  BTFSS  03.2
+0050:  GOTO   059
+*
+00BE:  MOVF   3A,F
+00BF:  BTFSS  03.2
+00C0:  GOTO   0C9
+*
+0107:  MOVF   3A,F
+0108:  BTFSS  03.2
+0109:  GOTO   112
+*
+0175:  MOVF   3A,F
+0176:  BTFSS  03.2
+0177:  GOTO   180
+.................... 				{ 
+.................... 					ret = (midi_tail == MAX_QUEUE); 
+*
+0051:  MOVF   3B,W
+0052:  SUBLW  0F
+0053:  BTFSC  03.2
+0054:  GOTO   057
+0055:  BCF    49.0
+0056:  GOTO   058
+0057:  BSF    49.0
+*
+00C1:  MOVF   3B,W
+00C2:  SUBLW  0F
+00C3:  BTFSC  03.2
+00C4:  GOTO   0C7
+00C5:  BCF    49.0
+00C6:  GOTO   0C8
+00C7:  BSF    49.0
+*
+010A:  MOVF   3B,W
+010B:  SUBLW  0F
+010C:  BTFSC  03.2
+010D:  GOTO   110
+010E:  BCF    49.0
+010F:  GOTO   111
+0110:  BSF    49.0
+*
+0178:  MOVF   3B,W
+0179:  SUBLW  0F
+017A:  BTFSC  03.2
+017B:  GOTO   17E
+017C:  BCF    49.0
+017D:  GOTO   17F
+017E:  BSF    49.0
+.................... 				} 
+.................... 			else 
+*
+0058:  GOTO   061
+*
+00C8:  GOTO   0D1
+*
+0111:  GOTO   11A
+*
+017F:  GOTO   188
+.................... 				{ 
+.................... 					ret = (midi_head == midi_tail + 1); 
+*
+0059:  MOVLW  01
+005A:  ADDWF  3B,W
+005B:  SUBWF  3A,W
+005C:  BTFSC  03.2
+005D:  GOTO   060
+005E:  BCF    49.0
+005F:  GOTO   061
+0060:  BSF    49.0
+*
+00C9:  MOVLW  01
+00CA:  ADDWF  3B,W
+00CB:  SUBWF  3A,W
+00CC:  BTFSC  03.2
+00CD:  GOTO   0D0
+00CE:  BCF    49.0
+00CF:  GOTO   0D1
+00D0:  BSF    49.0
+*
+0112:  MOVLW  01
+0113:  ADDWF  3B,W
+0114:  SUBWF  3A,W
+0115:  BTFSC  03.2
+0116:  GOTO   119
+0117:  BCF    49.0
+0118:  GOTO   11A
+0119:  BSF    49.0
+*
+0180:  MOVLW  01
+0181:  ADDWF  3B,W
+0182:  SUBWF  3A,W
+0183:  BTFSC  03.2
+0184:  GOTO   187
+0185:  BCF    49.0
+0186:  GOTO   188
+0187:  BSF    49.0
+.................... 				} 
+.................... 		} 
+.................... 	return ret; 
+*
+0061:  MOVLW  00
+0062:  BTFSC  49.0
+0063:  MOVLW  01
+0064:  MOVWF  78
+*
+00D1:  MOVLW  00
+00D2:  BTFSC  49.0
+00D3:  MOVLW  01
+00D4:  MOVWF  78
+*
+011A:  MOVLW  00
+011B:  BTFSC  49.0
+011C:  MOVLW  01
+011D:  MOVWF  78
+*
+0188:  MOVLW  00
+0189:  BTFSC  49.0
+018A:  MOVLW  01
+018B:  MOVWF  78
+.................... } 
+....................  
+....................  
+.................... #ifdef _USE_OUT_BUFFER 
+.................... #inline  
+.................... short OutQueueFull() 
+.................... { 
+.................... 	return (!out_queue.empty && out_queue.tail == out_queue.head); 
+.................... } 
+.................... #endif 
+....................  
+.................... #inline 
+.................... void InitialiseQueue() 
+.................... { 
+....................   midi_tail = 0;  
+*
+007F:  CLRF   3B
+....................   midi_head = 0; 
+0080:  CLRF   3A
+.................... } 
+....................  
+....................  
+.................... void InitialiseInQueue() 
+.................... { 
+....................   disable_interrupts (INT_RDA); // disable any Midi in  
+*
+007C:  BSF    03.5
+007D:  BCF    0C.5
+007E:  BCF    03.5
+.................... 	InitialiseQueue (); 
+.................... 	input_unlocked = true; 
+*
+0081:  BSF    29.0
+.................... 	midi_overflow = false; 
+0082:  BCF    29.1
+....................   enable_interrupts (INT_RDA); // disable any Midi in   
+0083:  BSF    03.5
+0084:  BSF    0C.5
+0085:  BCF    03.5
+0086:  RETLW  00
+.................... } 
+....................  
+....................  
+....................  
+.................... // function called when adding function. Called by interrupt by input 
+.................... #inline 
+.................... void AddQueue (byte new_byte) 
+.................... { 
+.................... 	midi_queue_data [midi_tail] = new_byte; 
+*
+006C:  MOVLW  2A
+006D:  ADDWF  3B,W
+006E:  MOVWF  04
+006F:  MOVF   49,W
+0070:  MOVWF  00
+*
+00DC:  MOVLW  2A
+00DD:  ADDWF  3B,W
+00DE:  MOVWF  04
+00DF:  MOVF   49,W
+00E0:  MOVWF  00
+*
+0125:  MOVLW  2A
+0126:  ADDWF  3B,W
+0127:  MOVWF  04
+0128:  MOVF   49,W
+0129:  MOVWF  00
+*
+0193:  MOVLW  2A
+0194:  ADDWF  3B,W
+0195:  MOVWF  04
+0196:  MOVF   49,W
+0197:  MOVWF  00
+.................... 	if(midi_tail == MAX_QUEUE) 
+*
+0071:  MOVF   3B,W
+0072:  SUBLW  0F
+0073:  BTFSS  03.2
+0074:  GOTO   077
+*
+00E1:  MOVF   3B,W
+00E2:  SUBLW  0F
+00E3:  BTFSS  03.2
+00E4:  GOTO   0E7
+*
+012A:  MOVF   3B,W
+012B:  SUBLW  0F
+012C:  BTFSS  03.2
+012D:  GOTO   130
+*
+0198:  MOVF   3B,W
+0199:  SUBLW  0F
+019A:  BTFSS  03.2
+019B:  GOTO   19E
+.................... 	{ 
+.................... 	  midi_tail = 0; 
+*
+0075:  CLRF   3B
+*
+00E5:  CLRF   3B
+*
+012E:  CLRF   3B
+*
+019C:  CLRF   3B
+.................... 	} 
+.................... 	else 
+*
+0076:  GOTO   078
+*
+00E6:  GOTO   0E8
+*
+012F:  GOTO   131
+*
+019D:  GOTO   19F
+.................... 	{ 
+.................... 	  midi_tail++; 
+*
+0077:  INCF   3B,F
+*
+00E7:  INCF   3B,F
+*
+0130:  INCF   3B,F
+*
+019E:  INCF   3B,F
+.................... 	} 
+.................... }   
+....................  
+.................... #inline  
+.................... byte GetQueue () 
+.................... { 
+....................   byte ret; 
+....................   ret = midi_queue_data [midi_head];  
+*
+0149:  MOVLW  2A
+014A:  ADDWF  3A,W
+014B:  MOVWF  04
+014C:  MOVF   00,W
+014D:  MOVWF  44
+*
+01A2:  MOVLW  2A
+01A3:  ADDWF  3A,W
+01A4:  MOVWF  04
+01A5:  MOVF   00,W
+01A6:  MOVWF  44
+.................... 	if (midi_head == MAX_QUEUE) 
+*
+014E:  MOVF   3A,W
+014F:  SUBLW  0F
+0150:  BTFSS  03.2
+0151:  GOTO   154
+*
+01A7:  MOVF   3A,W
+01A8:  SUBLW  0F
+01A9:  BTFSS  03.2
+01AA:  GOTO   1AD
+.................... 		{ 
+.................... 			midi_head = 0; 
+*
+0152:  CLRF   3A
+*
+01AB:  CLRF   3A
+.................... 		} 
+.................... 	else 
+*
+0153:  GOTO   155
+*
+01AC:  GOTO   1AE
+.................... 		{ 
+.................... 			midi_head++; 
+*
+0154:  INCF   3A,F
+*
+01AD:  INCF   3A,F
+.................... 		} 
+....................  
+.................... 	return ret; 
+*
+0155:  MOVF   44,W
+0156:  MOVWF  78
+*
+01AE:  MOVF   44,W
+01AF:  MOVWF  78
+.................... } 
+....................  
+.................... #inline 
+.................... void ClearInQueueOverflow() 
+.................... { 
+....................   midi_overflow = false; 
+.................... } 
+....................  
+.................... #inline 
+.................... void AddInQueue (byte new_byte) 
+.................... { 
+....................   if (InQueueFull()) 
+*
+0065:  MOVF   78,F
+0066:  BTFSC  03.2
+0067:  GOTO   06A
+*
+00D5:  MOVF   78,F
+00D6:  BTFSC  03.2
+00D7:  GOTO   0DA
+*
+011E:  MOVF   78,F
+011F:  BTFSC  03.2
+0120:  GOTO   123
+*
+018C:  MOVF   78,F
+018D:  BTFSC  03.2
+018E:  GOTO   191
+....................   { 
+....................     midi_overflow = true; 
+*
+0068:  BSF    29.1
+*
+00D8:  BSF    29.1
+*
+0121:  BSF    29.1
+*
+018F:  BSF    29.1
+....................   } 
+....................   else 
+*
+0069:  GOTO   078
+*
+00D9:  GOTO   0E8
+*
+0122:  GOTO   131
+*
+0190:  GOTO   19F
+....................   {	 
+....................     AddQueue (new_byte); 
+*
+006A:  MOVF   48,W
+006B:  MOVWF  49
+*
+00DA:  MOVF   48,W
+00DB:  MOVWF  49
+*
+0123:  MOVF   48,W
+0124:  MOVWF  49
+*
+0191:  MOVF   48,W
+0192:  MOVWF  49
+....................   } 
+.................... } 
+....................  
+.................... #int_rda 
+.................... DataReceived() 
+.................... { 
+....................   int midi_char; 
+....................   midi_char = getc(); 
+*
+0044:  GOTO   036
+0045:  MOVF   78,W
+0046:  MOVWF  47
+....................   AddInQueue (midi_char); 
+0047:  MOVF   47,W
+0048:  MOVWF  48
+.................... } 
+....................  
+....................  
+*
+0078:  BCF    0C.5
+0079:  BCF    0A.3
+007A:  BCF    0A.4
+007B:  GOTO   020
+.................... #inline  
+.................... void WriteOutData (byte out_byte) 
+.................... { 
+.................... #use rs232(baud=31250, xmit=MIDIOUT_1_PIN, rcv=MIDI_IN_PIN, ERRORS)  
+.................... #ifndef _SIMULATE 
+.................... 	putc (out_byte); 
+.................... #endif 
+....................  
+.................... } 
+....................  
+.................... #inline 
+.................... byte GetInChar() 
+.................... { 
+....................   byte ret; 
+....................    
+....................   disable_interrupts (INT_RDA); // disable any Midi in  
+*
+0146:  BSF    03.5
+0147:  BCF    0C.5
+0148:  BCF    03.5
+*
+019F:  BSF    03.5
+01A0:  BCF    0C.5
+01A1:  BCF    03.5
+....................  
+....................   ret = GetQueue (); 
+*
+0157:  MOVF   78,W
+0158:  MOVWF  43
+*
+01B0:  MOVF   78,W
+01B1:  MOVWF  43
+....................    
+....................   enable_interrupts (INT_RDA); // re-enable Midi in  
+*
+0159:  BSF    03.5
+015A:  BSF    0C.5
+*
+01B2:  BSF    03.5
+01B3:  BSF    0C.5
+....................  
+....................   input_unlocked = true; // set flag 
+*
+015B:  BCF    03.5
+015C:  BSF    29.0
+*
+01B4:  BCF    03.5
+01B5:  BSF    29.0
+....................  
+....................   return ret; 
+*
+015D:  MOVF   43,W
+015E:  MOVWF  78
+*
+01B6:  MOVF   43,W
+01B7:  MOVWF  78
+.................... } 
+....................  
+....................  
+....................  
+....................  
+....................  
+.................... #inline  
+.................... void WriteOutData2 (byte out_byte) 
+.................... { 
+.................... #use rs232(baud=31250, xmit=MIDIOUT_2_PIN, rcv=MIDI_IN_PIN, ERRORS)  
+....................   // we have to disable the interrupts here otherwise the data will become corrupted because it has no uart 
+....................   disable_interrupts(GLOBAL); 
+.................... #ifndef _SIMULATE 
+.................... 	putc (out_byte); 
+.................... #endif 
+....................   enable_interrupts(GLOBAL); 
+.................... } 
+....................  
+....................  
+....................  
+....................  
+.................... 
+.................... #include "watchdog.h" 
+....................   
+.................... #define NUM_WD_FLASHES	8 
+....................  
+.................... //#ifndef WATCHDOG_PIN 
+.................... #define WATCHDOG_PIN	PIN_C0 
+.................... //#endif 
+....................  
+.................... void FlashWatchdog(int16 ms_time) 
+.................... { 
+.................... 		output_high (WATCHDOG_PIN); 
+.................... 		restart_wdt(); 
+.................... #ifndef _SIMULATE 
+.................... 		delay_ms (ms_time); 
+.................... #endif 
+.................... 		restart_wdt(); 
+.................... 		output_low (WATCHDOG_PIN); 
+.................... #ifndef _SIMULATE 
+.................... 		delay_ms (ms_time); 
+.................... #endif 
+.................... 		restart_wdt(); 
+.................... } 
+....................  
+.................... void SetWatchdogLed (short value) 
+.................... { 
+.................... 	output_bit (WATCHDOG_PIN, value); 
+.................... } 
+....................  
+.................... void InitialiseWatchdog() 
+.................... { 
+.................... 	int i; 
+.................... 	for (i = 0; i < NUM_WD_FLASHES; i++) 
+.................... 		{ 
+.................... 			FlashWatchdog(100); 
+.................... 			restart_wdt(); 
+.................... 		} 
+.................... } 
+....................  
+.................... 
+.................... //#include "decmidi.h" 
+.................... //#include "procmidi.h" 
+....................  
+....................  
+.................... byte midi_in_char = 0; 
+.................... int logic_error = false; 
+.................... int success; 
+....................  
+.................... #ifdef TEST_QUEUE 
+.................... main() 
+.................... { 
+....................   int x; 
+....................   int queue_start; // this is the number that the queue head starts at when pushing into queue 
+....................   int y; 
+*
+0087:  CLRF   04
+0088:  MOVLW  1F
+0089:  ANDWF  03,F
+008A:  MOVLW  9F
+008B:  MOVWF  04
+008C:  MOVLW  07
+008D:  MOVWF  00
+008E:  CLRF   28
+008F:  MOVLW  04
+0090:  BSF    03.5
+0091:  MOVWF  19
+0092:  MOVLW  22
+0093:  MOVWF  18
+0094:  MOVLW  90
+0095:  BCF    03.5
+0096:  MOVWF  18
+0097:  MOVLW  04
+0098:  BSF    03.5
+0099:  MOVWF  19
+009A:  MOVLW  22
+009B:  MOVWF  18
+009C:  MOVLW  90
+009D:  BCF    03.5
+009E:  MOVWF  18
+009F:  MOVLW  FF
+00A0:  MOVWF  3C
+00A1:  BCF    3C.5
+00A2:  MOVF   3C,W
+00A3:  BSF    03.5
+00A4:  MOVWF  07
+00A5:  BCF    03.5
+00A6:  BSF    07.5
+00A7:  CLRF   3D
+00A8:  CLRF   3E
+....................    
+....................   InitialiseInQueue(); 
+00A9:  CALL   07C
+....................  
+....................   for (queue_start = 0; queue_start < MIDI_IN_QUEUE_SIZE; queue_start++) 
+00AA:  CLRF   41
+00AB:  MOVF   41,W
+00AC:  SUBLW  0F
+00AD:  BTFSS  03.0
+00AE:  GOTO   1BC
+....................   { 
+....................     // fill queue to max 
+....................     midi_in_char = 0; 
+00AF:  CLRF   3D
+....................     for (x = 0; x < MIDI_IN_QUEUE_SIZE -1; x++) 
+00B0:  CLRF   40
+00B1:  MOVF   40,W
+00B2:  SUBLW  0E
+00B3:  BTFSS  03.0
+00B4:  GOTO   0FE
+....................       { 
+....................       AddInQueue (midi_in_char++); 
+00B5:  MOVF   3D,W
+00B6:  INCF   3D,F
+00B7:  MOVWF  43
+00B8:  MOVWF  48
+....................        
+....................       if (InQueueEmpty() || InOverflow ()) 
+*
+00F0:  MOVF   78,F
+00F1:  BTFSS  03.2
+00F2:  GOTO   0FA
+*
+00F7:  MOVF   78,F
+00F8:  BTFSC  03.2
+00F9:  GOTO   0FC
+....................         { 
+....................         // we have an error in our logic somewhere or there is some midi coming in from somewhere else 
+....................         logic_error = true; 
+00FA:  MOVLW  01
+00FB:  MOVWF  3E
+....................         } 
+....................        
+....................       } 
+00FC:  INCF   40,F
+00FD:  GOTO   0B1
+....................    
+....................      // one more should cause an overflow 
+....................      AddInQueue (midi_in_char++); 
+00FE:  MOVF   3D,W
+00FF:  INCF   3D,F
+0100:  MOVWF  43
+0101:  MOVWF  48
+....................    
+....................       if (!InOverflow ()) 
+*
+0135:  MOVF   78,F
+0136:  BTFSS  03.2
+0137:  GOTO   13A
+....................         { 
+....................         // we have an error in our logic somewhere or there is some midi coming in from somewhere else 
+....................         logic_error = true; 
+0138:  MOVLW  01
+0139:  MOVWF  3E
+....................         } 
+....................    
+....................       // now pull the lot off the queue 
+....................       midi_in_char = 0; 
+013A:  CLRF   3D
+....................       while (!InQueueEmpty()) 
+*
+0143:  MOVF   78,F
+0144:  BTFSS  03.2
+0145:  GOTO   169
+....................         { 
+....................           x = GetInChar(); 
+*
+015F:  MOVF   78,W
+0160:  MOVWF  40
+....................           if (x != midi_in_char) 
+0161:  MOVF   3D,W
+0162:  SUBWF  40,W
+0163:  BTFSC  03.2
+0164:  GOTO   167
+....................             { 
+....................             // we have an error in our logic somewhere or there is some midi coming in from somewhere else 
+....................             logic_error = true; 
+0165:  MOVLW  01
+0166:  MOVWF  3E
+....................             } 
+....................            
+....................           midi_in_char++; 
+0167:  INCF   3D,F
+....................         } 
+0168:  GOTO   13B
+....................    
+....................       // now increment the start of the queue     
+....................       InitialiseInQueue(); 
+0169:  CALL   07C
+....................       for (y = 0; y < queue_start; y++) 
+016A:  CLRF   42
+016B:  MOVF   41,W
+016C:  SUBWF  42,W
+016D:  BTFSC  03.0
+016E:  GOTO   1BA
+....................         { 
+....................         AddInQueue (0); 
+016F:  CLRF   48
+....................         GetInChar(); 
+....................         }   
+*
+01B8:  INCF   42,F
+01B9:  GOTO   16B
+....................       } 
+01BA:  INCF   41,F
+01BB:  GOTO   0AB
+....................    
+....................     while (1) 
+....................       success = !logic_error; // set breakpoint here 
+01BC:  MOVF   3E,F
+01BD:  BTFSC  03.2
+01BE:  GOTO   1C1
+01BF:  MOVLW  00
+01C0:  GOTO   1C2
+01C1:  MOVLW  01
+01C2:  MOVWF  3F
+01C3:  GOTO   1BC
+....................      
+....................        
+....................  
+.................... } 
+....................      
+.................... #else // testing on hardware 
+....................  
+01C4:  SLEEP
+.................... main () 
+.................... { 
+....................   byte midi_char; 
+....................  
+....................   InitialiseWatchdog (); 
+....................   InitialiseMidiInQueue(); 
+....................   enable_interrupts(GLOBAL); 
+....................   while (1) 
+....................     { 
+....................     while (!MidiQueueEmpty()) 
+....................       { 
+....................       // flash led for each non zero char 
+....................       midi_char = GetMidiInChar(); 
+....................       if (midi_char) 
+....................         { 
+....................         FlashWatchdog (100); 
+....................         if (midi_char == 0xb1) // midi controller on channel 2 
+....................           { 
+....................           InitialiseMidiInQueue(); 
+....................           } 
+....................         } 
+....................       restart_wdt(); 
+....................       }  // end while queue not empty     
+....................      
+....................     if (MidiInOverflow ()) 
+....................       { 
+....................       FlashWatchdog (200); 
+....................        
+....................       } 
+....................     restart_wdt(); 
+....................     } // end while 1 
+.................... } // end main 
+....................    
+....................  
+.................... #endif 
+.................... 

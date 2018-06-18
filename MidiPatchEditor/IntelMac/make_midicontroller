@@ -1,0 +1,1 @@
+tar -cvzf MidicontIntel.tgz MidiController.command MidiController.jar libmidicontrollerlib.jnilib

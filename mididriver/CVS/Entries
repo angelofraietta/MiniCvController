@@ -1,0 +1,16 @@
+/iodata.h/1.5/Mon Apr  8 23:27:04 2002//
+/mididriver.h/1.7/Thu Jul 18 00:01:02 2002//
+/mididrv.h/1.1/Fri Jul 12 05:29:26 2002//
+/midiinputsync.h/1.9/Thu Jul 18 00:13:45 2002//
+/midiutilities.h/1.2/Tue Feb  5 23:07:13 2002//
+/stdafx.h/1.1/Mon Apr  8 03:24:43 2002//
+D/design////
+D/hal_rtems////
+D/hal_windows////
+D/test////
+D/hal_mac////
+/filedriver.h/1.4/Fri Sep 13 23:19:21 2002//
+/filedriver.cpp/1.4/Fri Sep 20 00:51:38 2002//
+/midiflags.h/1.31/Result of merge//
+/midiinputdriver.h/1.12/Fri May 30 03:54:37 2003//
+/midioutputdriver.h/1.24/Fri May 30 03:54:37 2003//

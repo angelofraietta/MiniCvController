@@ -1,0 +1,22 @@
+LIBRARY     MIDICONTROLLERLIB.DLL
+
+EXPORTS
+    @__lockDebuggerData$qv         @1   ; __lockDebuggerData()
+    @__unlockDebuggerData$qv       @2   ; __unlockDebuggerData()
+    Java_Midi_CancelWrite          @3   
+    Java_Midi_ConfigChanged        @4   
+    Java_Midi_DeInitialisePatchEditor @5   
+    Java_Midi_Initialise           @6   
+    Java_Midi_LoadConfig           @7   
+    Java_Midi_ReadMidiConfigByte   @8   
+    Java_Midi_SaveConfig           @9   
+    Java_Midi_SendFactoryDefault   @10  
+    Java_Midi_SendMidiData         @11  
+    Java_Midi_SendReadConfig       @12  
+    Java_Midi_SetInputDevice       @13  
+    Java_Midi_SetOutputDevice      @14  
+    Java_Midi_SetReferenceData     @15  
+    Java_Midi_WriteConfigByte      @16  
+    Java_Midi_WriteConfigChannelData @17  
+    Java_Midi_WriteNextConfigByte  @18  
+    __DebuggerHookData             @19  

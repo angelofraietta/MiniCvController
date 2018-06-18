@@ -1,0 +1,100 @@
+
+(object Petal
+    version    	42
+    _written   	"Rose 4.5.8163.3"
+    charSet    	0)
+
+(object Class_Utility "FileDriver"
+    attributes 	(list Attribute_Set
+	(object Attribute
+	    tool       	"Traversal"
+	    name       	"CodeFile"
+	    value      	"c:\\develop\\MidicontrollerPatchEditor\\mididriver\\filedriver.h")
+	(object Attribute
+	    tool       	"Traversal"
+	    name       	"BodyFile"
+	    value      	"c:\\develop\\MidicontrollerPatchEditor\\mididriver\\filedriver.cpp"))
+    quid       	"3D823D930073"
+    documentation 	"Saves and retrieves data received into a data file."
+    operations 	(list Operations
+	(object Operation "WriteByte"
+	    quid       	"3D823EA101B2"
+	    documentation 	"Writes byte to File"
+	    parameters 	(list Parameters
+		(object Parameter "data"
+		    documentation 	"The byte to be written"
+		    type       	"char")
+		(object Parameter "file_index"
+		    documentation 	"The file index of the file. This determines which file is opened, whether it is immitating the internal or external EEPROM on IO board"
+		    type       	"int"))
+	    result     	"bool"
+	    concurrency 	"Sequential"
+	    post_condition 	(object Semantic_Info
+		PDL        	
+|If File was not open (!_fp), file is opened write/append and set to the position of _pos
+|
+|_pos is incremented after writing to file
+		)
+	    opExportControl 	"Public"
+	    uid        	1031946735)
+	(object Operation "ReadByte"
+	    quid       	"3D823EBF02E1"
+	    documentation 	"Reads a byte from the open file"
+	    parameters 	(list Parameters
+		(object Parameter "file_index"
+		    documentation 	"The file index of the file. This determines which file is opened, whether it is immitating the internal or external EEPROM on IO board"
+		    type       	"int"))
+	    result     	"char"
+	    concurrency 	"Sequential"
+	    post_condition 	(object Semantic_Info
+		PDL        	
+|If File was not open (!_fp), file is opened read and set to the position of _pos
+|
+|_pos is incremented after writing to file
+		)
+	    opExportControl 	"Public"
+	    uid        	1031946736)
+	(object Operation "InitPosition"
+	    quid       	"3D823F08023C"
+	    documentation 	"Sets the _pos parameter of the file to zero and closes file if it is open"
+	    result     	"void"
+	    concurrency 	"Sequential"
+	    opExportControl 	"Public"
+	    uid        	1031946737)
+	(object Operation "Close"
+	    quid       	"3D8240510375"
+	    documentation 	"Closes File but does not reset position"
+	    result     	"void"
+	    concurrency 	"Sequential"
+	    opExportControl 	"Public"
+	    uid        	1031946738)
+	(object Operation "OpenForWrite"
+	    quid       	"3D82410F0166"
+	    documentation 	"Opens File for write / append"
+	    result     	"bool"
+	    concurrency 	"Sequential"
+	    post_condition 	(object Semantic_Info
+		PDL        	"File is set to position defined as _pos")
+	    opExportControl 	"Private"
+	    uid        	1031946739)
+	(object Operation "OpenForRead"
+	    quid       	"3D82411F00F1"
+	    documentation 	"Opens file for read"
+	    result     	"bool"
+	    concurrency 	"Sequential"
+	    post_condition 	(object Semantic_Info
+		PDL        	"File is set to position defined as _pos")
+	    opExportControl 	"Private"
+	    uid        	1031946740))
+    class_attributes 	(list class_attribute_list
+	(object ClassAttribute "_fp"
+	    quid       	"3D823E340377"
+	    documentation 	"File pointer for open file"
+	    type       	"FILE*"
+	    initv      	"0")
+	(object ClassAttribute "_pos"
+	    quid       	"3D823E5801B7"
+	    documentation 	"Current File Position"
+	    type       	"unsigned"
+	    initv      	"0"))
+    language   	"C++")

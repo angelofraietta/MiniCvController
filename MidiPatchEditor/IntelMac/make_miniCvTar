@@ -1,0 +1,1 @@
+tar -cvzf miniCVIntel.tgz libmidicontrollerlib.jnilib MiniMidiController.command MiniMidiController.jar 

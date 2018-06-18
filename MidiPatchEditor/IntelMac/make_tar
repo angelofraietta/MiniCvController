@@ -1,0 +1,1 @@
+tar -cvzf miniCvBluetooth.tgz minicv.ini MiniCv MiniCv.command

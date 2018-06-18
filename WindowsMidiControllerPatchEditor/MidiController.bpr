@@ -1,0 +1,221 @@
+# ---------------------------------------------------------------------------
+!if !$d(BCB)
+BCB = $(MAKEDIR)\..
+!endif
+
+# ---------------------------------------------------------------------------
+# IDE SECTION
+# ---------------------------------------------------------------------------
+# The following section of the project makefile is managed by the BCB IDE.
+# It is recommended to use the IDE to change any of the values in this
+# section.
+# ---------------------------------------------------------------------------
+
+VERSION = BCB.04.04
+# ---------------------------------------------------------------------------
+PROJECT = MidiController.exe
+OBJFILES = MidiController.obj wrapperunit.obj \
+  ..\threads\source\hal_windows\windowsevent.obj PatchEditor.obj About.obj
+RESFILES = MidiController.res
+RESDEPEN = $(RESFILES) wrapperunit.dfm PatchEditor.dfm About.dfm
+LIBFILES = MidContLiobrary.lib
+LIBRARIES = Vcl40.lib
+SPARELIBS = Vcl40.lib
+PACKAGES = Vcl40.bpi Vclx40.bpi vcljpg40.bpi bcbsmp40.bpi Qrpt40.bpi Vcldb40.bpi \
+  ibsmp40.bpi vcldbx40.bpi TeeUI40.bpi teedb40.bpi tee40.bpi nmfast40.bpi \
+  dclocx40.bpi
+DEFFILE =
+# ---------------------------------------------------------------------------
+PATHCPP = .;..\threads\source\hal_windows
+PATHASM = .;
+PATHPAS = .;
+PATHRC = .;
+DEBUGLIBPATH = $(BCB)\lib\debug
+RELEASELIBPATH = $(BCB)\lib\release
+USERDEFINES = _PATCH_EDITOR
+SYSDEFINES = NO_STRICT
+# ---------------------------------------------------------------------------
+CFLAG1 = -I"..\..\..\Program Files\Borland\CBuilder4\Projects";..\mididriver\hal_windows;..\threads\source\hal_windows;$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..;..\mididriver;..\threads\source;..\estl;..\midicontroller\code;c:\j2sdk1.4.1_01\include\;"c:\j2sdk1.4.1_01\include\win32\" \
+  -Od -Hc -H=$(BCB)\lib\vcl40.csm -w -Ve -r- -a1 -k -y -v -vi- -c -b- -w-par \
+  -w-inl -Vx -tW -tWM -D$(SYSDEFINES);$(USERDEFINES)
+PFLAGS = -U"..\..\..\Program Files\Borland\CBuilder4\Projects";..\mididriver\hal_windows;..\threads\source\hal_windows;..\threads\source;$(BCB)\lib\obj;$(BCB)\lib;$(RELEASELIBPATH) \
+  -I"..\..\..\Program Files\Borland\CBuilder4\Projects";..\mididriver\hal_windows;..\threads\source\hal_windows;$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..;..\mididriver;..\threads\source;..\estl;..\midicontroller\code;c:\j2sdk1.4.1_01\include\;"c:\j2sdk1.4.1_01\include\win32\" \
+  -D_PATCH_EDITOR -$YD -$W -$O- -v -JPHNE -M
+RFLAGS = -i"..\..\..\Program Files\Borland\CBuilder4\Projects";..\mididriver\hal_windows;..\threads\source\hal_windows;$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..;..\mididriver;..\threads\source;..\estl;..\midicontroller\code;c:\j2sdk1.4.1_01\include\;"c:\j2sdk1.4.1_01\include\win32\" \
+  -D_PATCH_EDITOR
+AFLAGS = /i"..\..\..\Program Files\Borland\CBuilder4\Projects" \
+  /i..\mididriver\hal_windows /i..\threads\source\hal_windows /i$(BCB)\include \
+  /i$(BCB)\include\vcl /i..Item1=c:\PROGRA~1\borland\CBUILD~1\include /i.. \
+  /i..\mididriver /i..\threads\source /i..\estl /i..\midicontroller\code \
+  /ic:\j2sdk1.4.1_01\include /ic:\j2sdk1.4.1_01\include\win32 /d_PATCH_EDITOR /mx \
+  /w2 /zd
+LFLAGS = -L"..\..\..\Program Files\Borland\CBuilder4\Projects";..\mididriver\hal_windows;..\threads\source\hal_windows;..\threads\source;$(BCB)\lib\obj;$(BCB)\lib;$(RELEASELIBPATH) \
+  -aa -Tpe -x -Gn -v
+# ---------------------------------------------------------------------------
+ALLOBJ = c0w32.obj sysinit.obj $(OBJFILES)
+ALLRES = $(RESFILES)
+ALLLIB = $(LIBFILES) $(LIBRARIES) import32.lib cp32mt.lib
+# ---------------------------------------------------------------------------
+!ifdef IDEOPTIONS
+
+[Version Info]
+IncludeVerInfo=1
+AutoIncBuild=0
+MajorVer=1
+MinorVer=0
+Release=0
+Build=0
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=1033
+CodePage=1252
+
+[Version Info Keys]
+CompanyName=Angelo Fraietta
+FileDescription=
+FileVersion=1.0.0.0
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
+Comments=
+
+[HistoryLists\hlIncludePath]
+Count=14
+Item0=..\..\..\Program Files\Borland\CBuilder4\Projects;..\mididriver\hal_windows;..\threads\source\hal_windows;$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..;..\mididriver;..\threads\source;..\estl;..\midicontroller\code;c:\j2sdk1.4.1_01\include;c:\j2sdk1.4.1_01\include\win32;
+Item1=..\..\..\Program Files\Borland\CBuilder4\Projects;..\mididriver\hal_windows;..\threads\source\hal_windows;$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..;..\mididriver;..\threads\source;..\estl;..\midicontroller\code
+Item2=..\mididriver\hal_windows;..\threads\source\hal_windows;$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..;..\mididriver;..\threads\source;..\estl;..\midicontroller\code
+Item3=$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..;..\mididriver;..\threads\source;..\estl; ..\midicontroller\code
+Item4=$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..;..\mididriver;..\threads\source;..\estl
+Item5=$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..;..\mididriver;..\threads\source
+Item6=$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..;..\mididriver; ..\threads
+Item7=$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..; ..\mididriver
+Item8=$(BCB)\include;$(BCB)\include\vcl;..Item1=c:\PROGRA~1\borland\CBUILD~1\include;..
+Item9=$(BCB)\include;$(BCB)\include\vcl;..Item1=$(BCB)\include;$(BCB)\include\vcl; ..Item1=..\..\..\..\Program Files\Borland\CBuilder4\Projects;$(BCB)\include;$(BCB)\include\vcl;..
+Item10=
+Item11=$(BCB)\include;$(BCB)\include\vcl;..Item1=$(BCB)\include;$(BCB)\include\vcl
+Item12=
+Item13=..\..\..\..\develop\maxmidi;$(BCB)\include;$(BCB)\include\vcl
+
+[HistoryLists\hlLibraryPath]
+Count=5
+Item0=..\..\..\Program Files\Borland\CBuilder4\Projects;..\mididriver\hal_windows;..\threads\source\hal_windows;..\threads\source;$(BCB)\lib\obj;$(BCB)\lib
+Item1=..\mididriver\hal_windows;..\threads\source\hal_windows;..\threads\source;$(BCB)\lib\obj;$(BCB)\lib
+Item2=$(BCB)\lib\obj;$(BCB)\lib
+Item3=..\..\..\..\Program Files\Borland\CBuilder4\Projects;$(BCB)\lib\obj;$(BCB)\lib
+Item4=..\..\..\..\develop\maxmidi;$(BCB)\lib\obj;$(BCB)\lib
+
+[HistoryLists\hlDebugSourcePath]
+Count=1
+Item0=$(BCB)\source\vcl
+
+[HistoryLists\hlConditionals]
+Count=1
+Item0=_PATCH_EDITOR
+
+[Debugging]
+DebugSourceDirs=$(BCB)\source\vcl
+
+[Parameters]
+RunParams=
+HostApplication=
+RemoteHost=
+RemotePath=
+RemoteDebug=0
+
+[Compiler]
+InMemoryExe=0
+ShowInfoMsgs=0
+
+!endif
+
+# ---------------------------------------------------------------------------
+# MAKE SECTION
+# ---------------------------------------------------------------------------
+# This section of the project file is not used by the BCB IDE.  It is for
+# the benefit of building from the command-line using the MAKE utility.
+# ---------------------------------------------------------------------------
+
+.autodepend
+# ---------------------------------------------------------------------------
+!if !$d(BCC32)
+BCC32 = bcc32
+!endif
+
+!if !$d(CPP32)
+CPP32 = cpp32
+!endif
+
+!if !$d(DCC32)
+DCC32 = dcc32
+!endif
+
+!if !$d(TASM32)
+TASM32 = tasm32
+!endif
+
+!if !$d(LINKER)
+LINKER = ilink32
+!endif
+
+!if !$d(BRCC32)
+BRCC32 = brcc32
+!endif
+
+# ---------------------------------------------------------------------------
+!if $d(PATHCPP)
+.PATH.CPP = $(PATHCPP)
+.PATH.C   = $(PATHCPP)
+!endif
+
+!if $d(PATHPAS)
+.PATH.PAS = $(PATHPAS)
+!endif
+
+!if $d(PATHASM)
+.PATH.ASM = $(PATHASM)
+!endif
+
+!if $d(PATHRC)
+.PATH.RC  = $(PATHRC)
+!endif
+# ---------------------------------------------------------------------------
+$(PROJECT): $(OBJFILES) $(RESDEPEN) $(DEFFILE)
+    $(BCB)\BIN\$(LINKER) @&&!
+    $(LFLAGS) +
+    $(ALLOBJ), +
+    $(PROJECT),, +
+    $(ALLLIB), +
+    $(DEFFILE), +
+    $(ALLRES)
+!
+# ---------------------------------------------------------------------------
+.pas.hpp:
+    $(BCB)\BIN\$(DCC32) $(PFLAGS) {$< }
+
+.pas.obj:
+    $(BCB)\BIN\$(DCC32) $(PFLAGS) {$< }
+
+.cpp.obj:
+    $(BCB)\BIN\$(BCC32) $(CFLAG1) -n$(@D) {$< }
+
+.c.obj:
+    $(BCB)\BIN\$(BCC32) $(CFLAG1) -n$(@D) {$< }
+
+.c.i:
+    $(BCB)\BIN\$(CPP32) $(CFLAG1) -n. {$< }
+
+.cpp.i:
+    $(BCB)\BIN\$(CPP32) $(CFLAG1) -n. {$< }
+
+.asm.obj:
+    $(BCB)\BIN\$(TASM32) $(AFLAGS) $<, $@
+
+.rc.res:
+    $(BCB)\BIN\$(BRCC32) $(RFLAGS) -fo$@ $<
+# ---------------------------------------------------------------------------

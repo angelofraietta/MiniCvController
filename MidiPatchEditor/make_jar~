@@ -1,0 +1,5 @@
+#cd ../classes
+
+# build the jar file
+jar -cfm ./build/MidiController.jar ./MidiController.mf classes/*.class classes/*.png
+

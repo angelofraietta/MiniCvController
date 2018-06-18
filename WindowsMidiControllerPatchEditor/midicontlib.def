@@ -1,0 +1,19 @@
+LIBRARY     MIDICONTROLLERLIB.DLL
+
+EXPORTS
+InitialisePatchEditor
+DeInitialisePatchEditor
+ReadMidiConfigByte
+WriteConfigByte
+WriteNextConfigByte
+ConfigChanged
+SetReferenceData
+LoadConfig
+SaveConfig
+WriteConfigChannelData
+SendFactoryDefault
+SendMidiData
+SendReadConfig
+CancelWrite
+SetOutputDevice
+SetIntputDevice
