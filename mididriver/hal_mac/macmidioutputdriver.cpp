@@ -237,7 +237,7 @@ MidiOutputDriver* MidiOutputDriver::create (int queue_size)
 // we are just going to overload this
 void MidiOutputDriver::TransmitMidiData (const MidiData& midi_data, int output_num)
 {
-    printf ("MidiOutputDriver::TransmitMidiData\r\n");
+    printf ("MidiOutputDriver::TransmitMidiData base\r\n");
 } 
 
 
@@ -624,9 +624,10 @@ void MacMidiOutputDriver::TransmitSoftSynthMidiMesssage(const MidiData& midi_dat
 
 void MacMidiOutputDriver::TransmitMidiData (const MidiData& midi_data, int output_num)
 {
-    printf("MacMidiOutputDriver::TransmitMidiData\r\n");
+    printf("MacMidiOutputDriver::TransmitMidiData Mod\r\n");
     if (_useSoftSynth)
     {
+        printf("MacMidiOutputDriver::TransmitSoftSynthMidiMesssage\r\n");
         TransmitSoftSynthMidiMesssage(midi_data);
     }
     else
