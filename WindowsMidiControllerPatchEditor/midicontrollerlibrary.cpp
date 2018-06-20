@@ -232,9 +232,11 @@ bool WriteConfigChannelData (const STR_CONFIG &config_msg)
   memcpy (configMessage + sizeof(WriteCfgHeader), &config_msg, sizeof (config_msg));
 
   aMidiOut->WriteSysexData (out_device_num, configMessage, sizeof(WriteCfgHeader) + sizeof(STR_CONFIG));
-  if (!SendDataToUDP (configMessage, sizeof(WriteCfgHeader) + sizeof(STR_CONFIG)))
-  {
-    printf ("Unable to Send To UDP\r\n");
+  if (out_socket){
+        if (!SendDataToUDP (configMessage, sizeof(WriteCfgHeader) + sizeof(STR_CONFIG)))
+        {
+          printf ("Unable to Send To UDP\r\n");
+        }
   }
 
   return true;
@@ -247,9 +249,11 @@ bool SendFactoryDefault()
   ValidateStoredConfig();
   aMidiOut->WriteSysexData (out_device_num, FactoryDefaultCfgHeader, sizeof(FactoryDefaultCfgHeader));
 
-  if (!SendDataToUDP (FactoryDefaultCfgHeader, sizeof(FactoryDefaultCfgHeader)))
-  {
-    printf ("Unable to Send To UDP\r\n");
+  if (out_socket){
+    if (!SendDataToUDP (FactoryDefaultCfgHeader, sizeof(FactoryDefaultCfgHeader)))
+    {
+      printf ("Unable to Send To UDP\r\n");
+    }
   }
 
   return true;
@@ -299,13 +303,15 @@ bool SendMidiData(const MidiData& data)
   memcpy (configMessage + sizeof(ReadCfgHeader), read_params, sizeof (read_params));
 
   aMidiOut->WriteSysexData (out_device_num, configMessage, sizeof(configMessage));
+  
+  if (out_socket){
+      if (!SendDataToUDP (configMessage, sizeof(configMessage)))
+      {
+        printf ("Unable to Send To UDP\r\n");
+      }
+    }
 
-  if (!SendDataToUDP (configMessage, sizeof(configMessage)))
-  {
-    printf ("Unable to Send To UDP\r\n");
-  }
-
-  return true;
+    return true;
 }
 
  bool WriteNextConfigByte()
@@ -338,18 +344,19 @@ bool SendMidiData(const MidiData& data)
 
       aMidiOut->WriteSysexData (out_device_num, configMessage, sizeof(WriteCfgHeader) + sizeof(STR_CONFIG));
 
-      if (!SendDataToUDP (configMessage, sizeof(WriteCfgHeader) + sizeof(STR_CONFIG)))
-      {
-        printf ("Unable to Send To UDP\r\n");
+      if (out_socket){
+        if (!SendDataToUDP (configMessage, sizeof(WriteCfgHeader) + sizeof(STR_CONFIG)))
+        {
+          printf ("Unable to Send To UDP\r\n");
+        }
       }
-
       printf ("Wrote next_config %d bytes\r\n", bytes_written);
 //      fprintf (outfile,  "Wrote next_config %d bytes\r\n", bytes_written);
       ret = true;
     }
 
     return ret;
-}
+ }
 
 void ProcessMidiByte (unsigned char midi_data)
 {
@@ -577,11 +584,14 @@ bool SendDeviceId(unsigned device_number)
     configMessage[sizeof(WriteCfgHeader) +1] = device_number;
     aMidiOut->WriteSysexData (out_device_num, configMessage, sizeof(configMessage));
 
-    if (!SendDataToUDP (configMessage, sizeof(configMessage)))
-    {
-      printf ("Unable to Send To UDP\r\n");
+    
+    if (out_socket){
+        if (!SendDataToUDP (configMessage, sizeof(configMessage)))
+        {
+          printf ("Unable to Send To UDP\r\n");
+        }
     }
-
+    
     SetCurrentDeviceNumber (device_number);
     ret = true;
     }
