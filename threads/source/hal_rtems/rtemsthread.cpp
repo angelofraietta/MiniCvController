@@ -129,7 +129,7 @@ RtemsThread::RtemsThread (ActiveObject* pActive)
 	rtems_status_code status;	
 	Task_name = rtems_build_name( 'T', 'A', '4', ' ' );
   
-  status = rtems_task_create(Task_name, 10, RTEMS_MINIMUM_STACK_SIZE * 10, RTEMS_DEFAULT_MODES, RTEMS_DEFAULT_ATTRIBUTES, &Task_id );
+  status = rtems_task_create(Task_name, 10, RTEMS_MINIMUM_STACK_SIZE * 10, RTEMS_TIMESLICE, RTEMS_DEFAULT_ATTRIBUTES, &Task_id );
 
 	if (status != RTEMS_SUCCESSFUL)
 		{

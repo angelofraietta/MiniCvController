@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include "activeobject.h"
 #include <pthread.h>
-#include <iostream.h>
+#include <iostream>
 //## end module%3D4719D5004D.includes
 
 // MultiThread
@@ -65,7 +65,7 @@ class MacThread : public MultiThread  //## Inherits: <unnamed>%3D4719900076
       void resume ();
 
       //## Operation: wait%1028069951
-      void wait (unsigned long period	// The period we are going to wait
+      void wait (unsigned long period // The period we are going to wait
       );
 
     // Additional Public Declarations

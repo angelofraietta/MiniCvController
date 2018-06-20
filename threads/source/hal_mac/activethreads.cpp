@@ -1,11 +1,12 @@
 
 #include "activeobject.h"
 #include "event.h"
+#include "mutex.h"
 
 #include <stdio.h>
 
 #include <unistd.h>
-#include <iostream.h>
+#include <iostream>
 
 
 void Sleep (unsigned long sleep_time)
@@ -30,7 +31,7 @@ class TestThread:public ActiveObject
 
 void TestThread::run()
 {
-	cout<<"test Thread run"<<endl;
+  std::cout<<"test Thread run"<<std::endl;
 	
     while (!Terminated() && !_purge)
 		{
@@ -38,13 +39,13 @@ void TestThread::run()
 				{
 					if (!_purge)
 						{
-							cout<<"TestThread:run"<<endl;
+						  std::cout<<"TestThread:run"<<std::endl;
 							//SysBeep (200);
 						}
 				}
 			else
 				{
-					cout<<"TestThread:event not received (this is OK)"<<endl;
+				  std::cout<<"TestThread:event not received (this is OK)"<<std::endl;
 				}
 		}
 
@@ -54,7 +55,7 @@ void TestThread::run()
 void TestThread::Purge()
 {
 	_purge = true;
-	cout<<"TestThread->Purge"<<endl;
+	std::cout<<"TestThread->Purge"<<std::endl;
   Go();
 }
 
@@ -63,19 +64,33 @@ void TestThread::Purge()
 
 int main ()
 {
-	cout<<"TestThread App2"<<endl;
+  Mutex* mutex = Mutex::create();
+  
+  std::cout<<"TestThread App2"<<std::endl;
 
 
+  int int_size = sizeof(int);
+  int long_size = sizeof(long);
+  int* ptr = &int_size;
+  int ptr_size = sizeof(ptr);
+  
+    std::cout<<"Int Size"<<int_size<<std::endl;
+    std::cout<<"Long Size"<<long_size<<std::endl;
 
+    std::cout<<"Pointer Size"<<ptr_size<<std::endl;
+
+  
   TestThread* t = new TestThread;
   t->start();
 
 	// last two should fail
 	for (unsigned i = 0; i < 6; i++)
 		{
-		cout<<"TestThread Main"<<i<<endl;
-			Sleep (i);
-			t->Go();
+                std::cout<<"TestThread Main"<<i<<std::endl;
+                mutex->Obtain();
+                Sleep (i);
+                t->Go();
+                mutex->Release();
 		}
 
 

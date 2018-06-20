@@ -8,7 +8,7 @@
 #include "sysexcommands.h"
 #include "midicfg.h"
 #include "procmidi.h"
-#include "sysexWriter.h"
+#include "sysexwriter.h"
 #include "midioutputdriver.h"
 #include "htmsocket.h"
 
@@ -28,7 +28,7 @@ const char* logfile = "log.txt";
 static void* out_socket;
 
 static volatile bool writing_config = false;
-#include "MidiInputUnit.h"
+#include "midiinputunit.h"
 
 #define SETTINGS_FILENAME  "Settings.ini"
 #define DEVICE_ID_INDEX 3 // his is the index in the sysex header that defines the Device Number

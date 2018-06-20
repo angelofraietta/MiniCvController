@@ -33,7 +33,7 @@ CPPFLAGS += -I ../midicontroller/code
 
 CPPFLAGS += $(DEFINES)
 
-FRAMEWORKS += -framework CoreMidi -framework CoreServices
+FRAMEWORKS += -framework CoreMidi -framework CoreServices -framework AudioToolbox
 
 LD_LIBS   +=  ../threads/source/hal_mac/sm_thread.a  
 LD_LIBS   +=  ../mididriver/hal_mac/sm_MIDI.a
@@ -48,7 +48,7 @@ clean:
 	rm *.o
 
 install:
-	cp  $(JAVLIB) /Users/angelofraietta/Desktop/MiniMidiController/
+	cp  $(JAVLIB) ~/miniCVIntel/
 
 .cpp.o :
 	cc $(JNI_INCLUDE) $(CPPFLAGS) -c $< -o $@

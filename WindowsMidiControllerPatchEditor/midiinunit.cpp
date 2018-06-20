@@ -6,7 +6,7 @@
 #include "maxmidi.h"
 #include "TMaxMidiIn.h"
 
-#include "MidiInUnit.h"
+#include "midiinunit.h"
 #include "wrapperUnit.h"
 
 MidiInProcessor::MidiInProcessor(TComponent* Owner, WORD DeviceID, HWND parent_window)

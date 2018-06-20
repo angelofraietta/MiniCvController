@@ -32,35 +32,26 @@ University of California, Berkeley.
  	send parameters to htm servers by udp or UNIX protocol
  */
 
+#ifdef __cplusplus
+extern "C" {
+
+#else
 #ifndef TRUE
 #define TRUE 1
 #define FALSE 0
 #endif
-
-#ifdef __cplusplus
-extern "C" {
-#else
-typedef int bool;
 #endif
 /* open a socket for HTM communication to given  host on given portnumber */
 /* if host is 0 then UNIX protocol is used (i.e. local communication) */
-void * OpenHTMSocket(const char *host, int portnumber);
+void *OpenHTMSocket(const char *host, int portnumber);
 
 /* send a buffer of data over htm socket, returns TRUE on success.
  Note that udp sends rarely fail. UNIX sends fail if a kernal buffer overflows */
-bool SendHTMSocket(void *htmsendhandle, int length_in_bytes, void *buffer);
+int SendHTMSocket(void *htmsendhandle, int length_in_bytes, void *buffer);
 
 /* close the socket(2) and release memory associated with it */
 void CloseHTMSocket(void *htmsendhandle);
 
-bool SetHTMDest (void *htmsendhandle, const char* host);
-
 #ifdef __cplusplus
-} //extern "C" {
+}; //extern "C" {
 #endif
-
-
-
-
-
-

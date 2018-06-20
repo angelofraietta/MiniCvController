@@ -20,9 +20,7 @@
 #include <sys/time.h>
 #include <mach/mach.h>
 #include <mach/clock.h>
-
 #include <mach/mach_error.h>
-#include<errno.h>
 //## end module%3D473347019E.includes
 
 // Event
@@ -181,16 +179,9 @@ bool MacEvent::Wait (int timeout)
 						case 0:
 							ret = true;
 							break;
-						case ETIMEDOUT:
-							//printf ("Event Timed out\r\n");
-							break;
-							
-						case EINVAL:
-							printf ("Invalid out\r\n");
-							break;
 							
 						default:
-							printf (" event fail\r\n");
+							//printf (" event fail\r\n");
 							break;
 						}
 				}

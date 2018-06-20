@@ -75,9 +75,10 @@ University of California, Berkeley.
 //#include <sys/prctl.h>
 
 	#include <stdlib.h>
+#include <string.h>
 #endif
 
-
+typedef int bool;
 
 
 
@@ -203,7 +204,7 @@ void * OpenHTMSocket(const char *host, int portnumber)
 				#endif
 				return 0;
 			}
-			
+
 			address = *((unsigned long *) hostsEntry->h_addr_list[0]);
 			o->serv_addr.sin_addr.s_addr = address;
 	    }
@@ -287,11 +288,42 @@ static  bool sendudp(const struct sockaddr *sp, int sockfd,int length, int count
 	}
 	return TRUE;
 }
+
 bool SendHTMSocket(void *htmsendhandle, int length_in_bytes, void *buffer)
 {
 	desc *o = (desc *)htmsendhandle;
 	return sendudp(o->addr, o->sockfd, o->len, length_in_bytes, buffer);
 }
+
+bool SetHTMDest (void *htmsendhandle, const char* host)
+{
+  bool ret = FALSE;
+	desc *o = (desc *)htmsendhandle;
+  if (o && host)
+  {
+	  struct hostent *hostsEntry;
+		unsigned long address;
+
+	  hostsEntry = gethostbyname(host);
+
+		if (hostsEntry == NULL)
+    {
+		  fprintf(stderr, "Couldn't decipher host name \"%s\"\n", host);
+			#ifndef WIN32
+			herror(NULL);
+			#endif
+    } /*if (hostsEntry == NULL) */
+    else
+    {
+      address = *((unsigned long *) hostsEntry->h_addr_list[0]);
+      o->serv_addr.sin_addr.s_addr = address;
+      ret = TRUE;
+    }
+  } /*if (hostsEntry == NULL) */
+
+  return ret;
+}
+
 void CloseHTMSocket(void *htmsendhandle)
 {
 	desc *o = (desc *)htmsendhandle;

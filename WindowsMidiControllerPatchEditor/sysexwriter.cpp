@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 #include "midioutputdriver.h"
-#include "SysexWriter.h"
+#include "sysexwriter.h"
 #include "mididrv.h"
 
 

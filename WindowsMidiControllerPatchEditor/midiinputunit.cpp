@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------
-#include "MidiInputUnit.h"
+#include "midiinputunit.h"
 
 void MidiInDriver::processMidiInput()
 {
