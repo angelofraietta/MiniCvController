@@ -50,7 +50,7 @@ const byte ReadCfgHeader [] = {SYSEX_ID, BASIC_MIDI_CONTROLLER, ANY_DEVICE_ID_NU
 
 SysexWriter* aMidiOut;
 MidiInDriver* pMidiIn;
-MidiOutputDriver* midi_out;
+MidiOutputDriver* pMidiOut;
 
 volatile bool in_sysex; // flag determining whether we are in a sysex
 volatile unsigned byte_num;
@@ -167,6 +167,12 @@ unsigned GetBytesWritten()
 
 void WriteConfigByte(int index, byte value)
 {
+    static int last_index = -1;
+    
+    if (index != last_index){
+        printf ("WriteConfigByte %u 0x%02x\n", index, value);
+        last_index = index;
+    }
   if (index < CONFIG_SIZE)
   {
     config_data[index] = value;
@@ -191,7 +197,7 @@ byte ReadConfigByte (int index)
 void InitialisePatchEditor ()
 {
   pMidiIn  = new MidiInDriver (ProcessMidiByte, 1024);
-  midi_out  = MidiOutputDriver::create (1024);
+  pMidiOut  = MidiOutputDriver::create (1024);
   aMidiOut = new SysexWriter;
   in_sysex = false;
 
@@ -209,10 +215,10 @@ void DeInitialisePatchEditor()
     delete pMidiIn;
     delete aMidiOut;
 
-    if (midi_out)
+    if (pMidiOut)
       {
-      delete midi_out;
-      midi_out = NULL;
+      delete pMidiOut;
+      pMidiOut = NULL;
       }
 
 
@@ -221,7 +227,7 @@ void DeInitialisePatchEditor()
 
 
 bool WriteConfigChannelData (const STR_CONFIG &config_msg)
-{
+{   
   byte configMessage [sizeof(WriteCfgHeader) + sizeof(STR_CONFIG)];
   memcpy (configMessage, WriteCfgHeader, sizeof(WriteCfgHeader));
 
@@ -261,7 +267,7 @@ bool SendFactoryDefault()
 
 bool SendMidiData(const MidiData& data)
 {
-  midi_out->TransmitMidiData(data);
+  pMidiOut->TransmitMidiData(data);
 
   SendMidiToUDP ((const unsigned char*) &data, sizeof(MidiData));
 
@@ -270,8 +276,9 @@ bool SendMidiData(const MidiData& data)
 
  bool SetOutputDevice(unsigned dev_num)
 {
+     printf ("Set output device %u\n", dev_num);
   out_device_num = dev_num;
-  return midi_out->open(dev_num);
+  return pMidiOut->open(dev_num);
 }
 
  bool SetIntputDevice(unsigned dev_num)

@@ -42,8 +42,20 @@ int main()
 {
   char c;
 
+  const int OUT_DEVICE_NUM = 1;
+  
+  char name_buff[256];
   MidiOutputDriver* pOutputDriver = MidiOutputDriver::create (1024);
   MidiInDriver* pMidiIn = new MidiInDriver (1024);
+  
+  if (MidiOutputDriver::GetDeviceName(OUT_DEVICE_NUM, name_buff, sizeof(name_buff)))
+  {
+      printf ("Out Device Name for %u %s\n", OUT_DEVICE_NUM, name_buff);           
+  }
+  else
+  {
+      printf("Unable to read device name\n");
+  }
   
   if (!pMidiIn->open(0))
     {
@@ -52,7 +64,7 @@ int main()
   
   pMidiIn->start();
   
-  if (pOutputDriver->open(0))
+  if (pOutputDriver->open(OUT_DEVICE_NUM))
     {
       std::cout<<"Midi Output opened"<<std::endl;
     }

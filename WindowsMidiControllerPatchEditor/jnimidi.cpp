@@ -6,7 +6,8 @@ typedef unsigned char byte;
 
 /* Header for class Midi */
 #include "iodata.h"
-#include "midicfg.h"
+
+#include "midicfg.h"
 
 #include "midicontrollerlibrary.h"
 
@@ -64,15 +65,24 @@ bool ReadBoolField(JNIEnv *env, jclass config_class, jobject config, const char*
  */
 extern "C" JNIEXPORT void JNICALL Java_Midi_Initialise
   (JNIEnv *, jclass)
-{
-  for (unsigned i = 0; i < 256; i++)
-  {
-    WriteConfigByte(i, 0xff);
-  }
-//  SendFactoryDefault();
-  printf ("Initialise Patch Editor\r\n");
-  InitialisePatchEditor();
-}
+
+{
+
+  for (unsigned i = 0; i < 256; i++)
+
+  {
+
+    WriteConfigByte(i, 0xff);
+
+  }
+
+//  SendFactoryDefault();
+
+  printf ("Initialise Patch Editor\r\n");
+
+  InitialisePatchEditor();
+
+}
 
 /*
  * Class:     Midi
@@ -81,9 +91,12 @@ extern "C" JNIEXPORT void JNICALL Java_Midi_Initialise
  */
 extern "C" JNIEXPORT void JNICALL Java_Midi_DeInitialisePatchEditor
   (JNIEnv *, jclass)
-{
-  DeInitialisePatchEditor();
-}
+
+{
+
+  DeInitialisePatchEditor();
+
+}
 
 /*
  * Class:     Midi
@@ -92,9 +105,12 @@ extern "C" JNIEXPORT void JNICALL Java_Midi_DeInitialisePatchEditor
  */
 extern "C" JNIEXPORT jboolean JNICALL Java_Midi_ConfigChanged
   (JNIEnv *, jclass)
-{
-  return ConfigChanged();
-}
+
+{
+
+  return ConfigChanged();
+
+}
 
 /*
  * Class:     Midi
@@ -103,10 +119,14 @@ extern "C" JNIEXPORT jboolean JNICALL Java_Midi_ConfigChanged
  */
 extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SetReferenceData
   (JNIEnv *, jclass)
-  {
-    SetReferenceData();
-    return true;
-  }
+
+  {
+
+    SetReferenceData();
+
+    return true;
+
+  }
 
 /*
  * Class:     Midi
@@ -115,10 +135,14 @@ extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SetReferenceData
  */
 extern "C" JNIEXPORT jboolean JNICALL Java_Midi_LoadConfig
   (JNIEnv *env, jclass, jstring j_filename)
-{
-  const char* filename = env->GetStringUTFChars(j_filename, NULL);
-  return LoadConfig(filename);
-}
+
+{
+
+  const char* filename = env->GetStringUTFChars(j_filename, NULL);
+
+  return LoadConfig(filename);
+
+}
 
 /*
  * Class:     Midi
@@ -127,11 +151,15 @@ extern "C" JNIEXPORT jboolean JNICALL Java_Midi_LoadConfig
  */
 extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SaveConfig
   (JNIEnv *env, jclass, jstring j_filename)
-{
 
-  const char* filename = env->GetStringUTFChars(j_filename, NULL);
-  return SaveConfig(filename);
-}
+{
+
+
+  const char* filename = env->GetStringUTFChars(j_filename, NULL);
+
+  return SaveConfig(filename);
+
+}
 
 /*
  * Class:     Midi
@@ -140,14 +168,21 @@ extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SaveConfig
  */
 extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SendFactoryDefault
   (JNIEnv *, jclass)
-{
-  for (unsigned i = 0; i < 256; i++)
-  {
-    WriteConfigByte(i, 0xff);
-  }
 
-  return SendFactoryDefault();
-}
+{
+
+  for (unsigned i = 0; i < 256; i++)
+
+  {
+
+    WriteConfigByte(i, 0xff);
+
+  }
+
+
+  return SendFactoryDefault();
+
+}
 
 
 /*
@@ -157,9 +192,12 @@ extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SendFactoryDefault
  */
 extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SendReadConfig
   (JNIEnv *, jclass)
-{
-  return SendReadConfig();
-}
+
+{
+
+  return SendReadConfig();
+
+}
 
 /*
  * Class:     Midi
@@ -168,9 +206,12 @@ extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SendReadConfig
  */
 extern "C" JNIEXPORT void JNICALL Java_Midi_CancelWrite
   (JNIEnv *, jclass)
-{
-  CancelWrite();
-}
+
+{
+
+  CancelWrite();
+
+}
 
 /*
  * Class:     Midi
@@ -179,9 +220,12 @@ extern "C" JNIEXPORT void JNICALL Java_Midi_CancelWrite
  */
 extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SetOutputDevice
   (JNIEnv *, jclass, jint device)
-{
-  return SetOutputDevice (device);
-}
+
+{
+
+  return SetOutputDevice (device);
+
+}
 
 /*
  * Class:     Midi
@@ -190,15 +234,21 @@ extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SetOutputDevice
  */
 extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SetInputDevice
   (JNIEnv *, jclass, jint device)
-{
-  return SetIntputDevice (device);
-}
+
+{
+
+  return SetIntputDevice (device);
+
+}
 
 extern "C" JNIEXPORT jint JNICALL Java_Midi_NumInputDevice
   (JNIEnv *, jclass)
-{
-   return GetNumMidiInDevices();
-}
+
+{
+
+   return GetNumMidiInDevices();
+
+}
 
 /*
  * Class:     Midi
@@ -207,9 +257,12 @@ extern "C" JNIEXPORT jint JNICALL Java_Midi_NumInputDevice
  */
 extern "C" JNIEXPORT jint JNICALL Java_Midi_NumOutputDevice
   (JNIEnv *, jclass)
-{
-  return GetNumMidiOutDevices();
-}
+
+{
+
+  return GetNumMidiOutDevices();
+
+}
 
 /*
  * Class:     Midi
@@ -219,8 +272,10 @@ extern "C" JNIEXPORT jint JNICALL Java_Midi_NumOutputDevice
 extern "C" JNIEXPORT jstring JNICALL Java_Midi_GetInputDeviceName
   (JNIEnv *env, jclass, jint index)
 {
-  char buf [256];
-  jstring ret = 0;
+
+  char buf [256];
+
+  jstring ret = 0;
 
   if (GetMidiInputName (index,  buf,  sizeof(buf)))
   {
@@ -228,7 +283,8 @@ extern "C" JNIEXPORT jstring JNICALL Java_Midi_GetInputDeviceName
   }
 
   return ret;
-}
+
+}
 
 /*
  * Class:     Midi
@@ -237,9 +293,12 @@ extern "C" JNIEXPORT jstring JNICALL Java_Midi_GetInputDeviceName
  */
 extern "C" JNIEXPORT jstring JNICALL Java_Midi_GetOutputDeviceName
   (JNIEnv *env, jclass, jint index)
-{
-  char buf [256];
-  jstring ret = 0;
+
+{
+
+  char buf [256];
+
+  jstring ret = 0;
 
   if (GetMidiOutputName (index,  buf,  sizeof(buf)))
   {
@@ -247,7 +306,8 @@ extern "C" JNIEXPORT jstring JNICALL Java_Midi_GetOutputDeviceName
   }
 
   return ret;
-}
+
+}
 
 extern "C" JNIEXPORT void JNICALL Java_MidiConfig_GetMidiConfig
   (JNIEnv *env, jobject config, jint index)
@@ -354,16 +414,26 @@ extern "C" JNIEXPORT void JNICALL Java_MidiConfig_SetMidiConfig
 
 extern "C" JNIEXPORT void JNICALL Java_Midi_SetMidiMerge
   (JNIEnv *, jclass, jboolean merge)
-{
-  if (merge)
-  {
-    WriteConfigByte (MIDI_MERGE_ADDRESS, 0xff);
-  }
-  else
-  {
-    WriteConfigByte (MIDI_MERGE_ADDRESS, 0x0);
-  }
-}
+
+{
+
+  if (merge)
+
+  {
+
+    WriteConfigByte (MIDI_MERGE_ADDRESS, 0xff);
+
+  }
+
+  else
+
+  {
+
+    WriteConfigByte (MIDI_MERGE_ADDRESS, 0x0);
+
+  }
+
+}
 
 /*
  * Class:     Midi
@@ -384,15 +454,22 @@ extern "C" JNIEXPORT void JNICALL Java_Midi_SendConfig
 
 extern "C" JNIEXPORT jboolean JNICALL Java_MidiMessage_GetMidiMessage
   (JNIEnv *env, jobject midi_message)
-{
-  MidiData ret_data;
 
-  bool ret = GetMidiData(&ret_data);
+{
 
-  if (ret)
-  {
-    jclass message_class = env->GetObjectClass(midi_message);
-    int status = ret_data.status / 16 - 8;
+  MidiData ret_data;
+
+
+  bool ret = GetMidiData(&ret_data);
+
+
+  if (ret)
+
+  {
+
+    jclass message_class = env->GetObjectClass(midi_message);
+
+    int status = ret_data.status / 16 - 8;
     int channel =  ret_data.status & 0x0f;
 
     if (ret_data.status == BLUEWAVE_STATUS)
@@ -425,11 +502,15 @@ extern "C" JNIEXPORT jboolean JNICALL Java_MidiMessage_GetMidiMessage
       WriteIntField(env, message_class, midi_message, FIELD_MIDI_CHANNEL, channel);
       WriteIntField(env, message_class, midi_message, FIELD_DATA_1, ret_data.data1);
       WriteIntField(env, message_class, midi_message, FIELD_DATA_2, ret_data.data2);
-    }
-  }
 
-  return ret;
-}
+    }
+
+  }
+
+
+  return ret;
+
+}
 
 /*
  * Class:     MidiMessage
@@ -442,8 +523,10 @@ extern "C" JNIEXPORT jboolean JNICALL Java_MidiMessage_SetMidiMessage
 
   MidiData data;
 
-  // now copy parameters into Java Class Object
-  jclass message_class = env->GetObjectClass(midi_message);
+
+  // now copy parameters into Java Class Object
+
+  jclass message_class = env->GetObjectClass(midi_message);
 
   byte status, channel;
 
@@ -454,14 +537,18 @@ extern "C" JNIEXPORT jboolean JNICALL Java_MidiMessage_SetMidiMessage
   data.data1 = (byte) ReadIntField(env, message_class, midi_message, FIELD_DATA_1);
   data.data2 = (byte) ReadIntField(env, message_class, midi_message, FIELD_DATA_2);
 
-  return SendMidiData(data);
+
+  return SendMidiData(data);
 }
 
 extern "C" JNIEXPORT jint JNICALL Java_Midi_GetBytesRead
   (JNIEnv *, jclass)
-{
-  return GetBytesWritten();
-}
+
+{
+
+  return GetBytesWritten();
+
+}
 
 extern "C" JNIEXPORT jbyte JNICALL Java_Midi_ReadConfigByte
   (JNIEnv *, jclass, jint index)
@@ -474,7 +561,9 @@ extern "C" JNIEXPORT void JNICALL Java_Midi_WriteConfigByte
 {
   if (((unsigned)index) <= 255)
   {
-    WriteConfigByte(index, value);
+      if (index != 5){
+        WriteConfigByte(index, value);
+      }
   }
 
 }
@@ -542,9 +631,12 @@ extern "C" JNIEXPORT jboolean JNICALL Java_Midi_GetAnaOutEnabled
  */
 extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SetDeviceNumber
   (JNIEnv *, jclass, jint device_number)
-{
-  return SetCurrentDeviceNumber (device_number);
-}
+
+{
+
+  return SetCurrentDeviceNumber (device_number);
+
+}
 
 /*
  * Class:     Midi
@@ -553,9 +645,12 @@ extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SetDeviceNumber
  */
 extern "C" JNIEXPORT jint JNICALL Java_Midi_GetDeviceNumber
   (JNIEnv *, jclass)
-{
-  return GetCurrentDeviceNum();
-}
+
+{
+
+  return GetCurrentDeviceNum();
+
+}
 
 /*
  * Class:     Midi
@@ -564,22 +659,33 @@ extern "C" JNIEXPORT jint JNICALL Java_Midi_GetDeviceNumber
  */
 extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SendDeviceNumber
   (JNIEnv *, jclass, jint device_number)
-{
-  return   SendDeviceId(device_number);
-}
+
+{
+
+  return   SendDeviceId(device_number);
+
+}
 
 extern "C" JNIEXPORT jboolean JNICALL Java_Midi_SetUDPDestination
   (JNIEnv *env, jclass, jstring ip_address, jint device_number)
-{
 
-  const char* target_address = env->GetStringUTFChars(ip_address, NULL);
+{
 
-  // If we send a Zero Value, we can test for false if they give a port value of zero
-  if (device_number)
-    return OpenUDPSocket (target_address, device_number);
-  else
-    return false;
-}
+
+  const char* target_address = env->GetStringUTFChars(ip_address, NULL);
+
+
+  // If we send a Zero Value, we can test for false if they give a port value of zero
+
+  if (device_number)
+
+    return OpenUDPSocket (target_address, device_number);
+
+  else
+
+    return false;
+
+}
 
 extern "C" JNIEXPORT void JNICALL Java_Midi_ProcessConfigByte
   (JNIEnv *env, jclass, jbyte midi_byte)
